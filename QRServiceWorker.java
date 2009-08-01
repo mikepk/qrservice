@@ -23,16 +23,10 @@ public class QRServiceWorker implements Runnable {
 
         
             InputStream raw_in = this.client.getInputStream();
-        }
-        catch(IOException ioe) {
-            System.out.println("I/O from socket failed");
-            System.exit(-1);   
-        }
         //BufferedReader in = new BufferedReader(new InputStreamReader(raw_in));
         //String inputLine; //, outputLine=null;
 
         byte[] outputLine = null;
-
         // initiate conversation with client
         QRServiceProtocol qrp = new QRServiceProtocol();
 
@@ -136,7 +130,15 @@ public class QRServiceWorker implements Runnable {
         //     
         // }
         
-    }
-}
+    }//end while
     
-}
+    }//end try
+    catch(IOException ioe) {
+        System.out.println("I/O from socket failed");
+        System.exit(-1);   
+    }//end catch
+    
+    
+    }// end run()
+    
+}// end class

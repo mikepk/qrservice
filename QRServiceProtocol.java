@@ -57,7 +57,7 @@ public class QRServiceProtocol {
 
     private String[] commands = {"encode","decode","done"};
 
-    private byte[] data_buffer = new byte[1024*500];
+    private byte[] data_buffer = new byte[1024*1024*5]; // 5MB image buffer
     private int buffer_pos = 0;
 
     private boolean input_binmode = false;
@@ -88,7 +88,16 @@ public class QRServiceProtocol {
         //System.out.println(new String(raw_data));
         
         //System.out.println("buffer position:"+buffer_pos);
+        try{
         System.arraycopy(raw_data,0,data_buffer,buffer_pos,amount);
+    }
+    catch (Exception e) {
+        System.out.println("Buffer overflow?");
+        System.out.println(e);
+        System.out.println("buffer position:"+buffer_pos);
+        System.out.println("Amount:"+amount);
+        return "IMAGE TOO LARGE".getBytes();
+    }
         buffer_pos += amount;
         //data_buffer = data_buffer.concat(theInput+"\n");
         theOutput = "";
@@ -166,6 +175,8 @@ public class QRServiceProtocol {
             else if (theInput.equalsIgnoreCase("done")) {
                 theOutput = "Bye.";
                 state = WAITING;
+                command = NONE;
+                input_binmode = false;
             } else {                
                 theOutput = "QRService v0.1 - "+theInput+" Command Not Recognized\n";
             }
