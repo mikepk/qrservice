@@ -352,10 +352,10 @@ public class QRServiceProtocol {
     //, Hashtable<DecodeHintType, Object> hints
     private static String QRDecodeByteString(byte[] bin_data) throws IOException {
         //System.out.println("Trying to decode?");
-        File dump = new File("img_test.png");
-        //byte[] bin_data = 
-        FileOutputStream out = new FileOutputStream(dump);
-        out.write(bin_data);
+        // File dump = new File("img_test.png");
+        //         //byte[] bin_data = 
+        //         FileOutputStream out = new FileOutputStream(dump);
+        //         out.write(bin_data);
 
       BufferedImage image;
       Hashtable<DecodeHintType, Object> hints = null;
