@@ -67,10 +67,11 @@ public class QRServiceWorker implements Runnable {
                     marker_read++;
                 
                     // for (int x=0; x<5; x++) {
-                    //     System.out.println(((int) marker_buffer[x] & 0xFF)+" -- "+((char) marker_buffer[x]));
+                    //      System.out.println(((int) marker_buffer[x] & 0xFF)+" -- "+((char) marker_buffer[x]));
                     // }
                     //System.out.println((int) marker_buffer[4] & 0xFF);
-                    if(marker_buffer[0] == 70 && marker_buffer[1] == 79 && marker_buffer[2] == 69) {
+                    if(marker_buffer[0] == 70 && marker_buffer[1] == 79 && marker_buffer[2] == 69 && marker_buffer[3] == 10) {
+                        //System.out.println(new String(marker_buffer));
                         end_of_file = true;
                         break;
                     }
@@ -93,12 +94,25 @@ public class QRServiceWorker implements Runnable {
                 //System.out.print("Buffer read "+(num_read-4));
                 outputLine = qrp.processInput(buffer,num_read-4,end_of_file);
             }
+            // else not in binary mode?
             else {
                 //System.out.println("Character "+((char) buffer[num_read-1]));
                 num_read = raw_in.read(buffer);
-                if(num_read > 1) {
-                    outputLine = qrp.processInput(new String(buffer).substring(0,num_read-1));
-                }
+                try {
+                //System.out.println(num_read);
+                //System.out.println(buffer);
+
+                    if(num_read > 1) {
+                        outputLine = qrp.processInput(new String(buffer).substring(0,num_read-1));
+                    }
+                } // end try
+                catch(StringIndexOutOfBoundsException sobe) {
+                    String s = sobe.getMessage();
+                    System.out.println(s);
+                    outputLine = "NO BARCODE".getBytes();
+                } //end catch
+                
+                
             }
             java.util.Arrays.fill(buffer, (byte) 0);
             //stream_pos += num_read;
@@ -117,27 +131,17 @@ public class QRServiceWorker implements Runnable {
                  //this.client.close();
                  break;
              }
-        // while ((inputLine = in.readLine()) != null) {    
-        //     if(qrp.isBinary()) {
-        // 
-        //     }
-        //     else {
-        //         outputLine = qrp.processInput(inputLine);
-        //     }
-        //     
-        //     if (outputLine.equals("Bye."))
-        //         break;
-        //     
-        // }
         
     }//end while
     
     }//end try
     catch(IOException ioe) {
+        String s = ioe.getMessage();
+        System.out.println(s);
         System.out.println("I/O from socket failed");
         System.exit(-1);   
     }//end catch
-    
+
     
     }// end run()
     
