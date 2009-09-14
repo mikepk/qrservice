@@ -237,7 +237,7 @@ public class QRServiceProtocol {
 
         QRCode code = new QRCode();
         code.setVersion(3);
-        Encoder.encode(data, ErrorCorrectionLevel.H, code);
+        Encoder.encode(data, ErrorCorrectionLevel.Q, code);
 
         //return renderResult(code, width, height);
 
